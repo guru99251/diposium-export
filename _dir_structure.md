@@ -1,59 +1,52 @@
 ```bash
-/project-root
-├── README.md                    # 프로젝트 개요 및 실행 가이드
-├── .gitignore
-├── render.yaml                  # Render.com 서비스 정의 (서버 + 웹 UI)
-
-├── docs/                        # 설계 및 디자인 문서
-│   ├── CIRCUIT_MAP_DESIGN.md    # 회로도 스타일 전시장 지도 디자인
-│   ├── USER_FLOW_DIAGRAM.md     # 전체 인터랙션 & 출력 플로우
-│   └── DEPLOYMENT_GUIDE.md      # 배포 가이드 (Render + Supabase)
-
-├── client/                      # Next.js 기반 관람객/출력 UI & 관리자 대시보드
+diposium-export/
+├── .gitignore                     # 공통 무시 파일 (node_modules, env 등)
+├── package.json                   # 루트 스크립트 (setup/dev/build/start)
+├── render.yaml                    # Render 배포 설정 파일 (API + Web)
+│
+├── docs/                          # 기획·설계 문서
+│   ├── API_SPEC.md                # API 명세
+│   ├── CIRCUIT_MAP_DESIGN.md      # 회로도 스타일 지도 디자인 문서
+│   ├── CHIP_RULES.md              # 개인화 칩 규칙표
+│   ├── USER_FLOW_DIAGRAM.md       # 유저 플로우 다이어그램
+│   └── DEPLOYMENT_GUIDE.md        # 배포 가이드
+│
+├── client/                        # Next.js 기반 프론트엔드 (출력 UI & 대시보드)
 │   ├── package.json
 │   ├── next.config.js
-│   ├── tailwind.config.js
+│   ├── postcss.config.mjs         # PostCSS 설정 (Tailwind 포함)
+│   ├── tailwind.config.js         # Tailwind 설정 (src 경로 스캔 필수)
 │   ├── public/
 │   │   ├── favicon.ico
 │   │   └── logo.png
 │   └── src/
-│       ├── pages/
-│       │   ├── index.js         # 관람객 메인 UI (회로도 지도 + 작품 선택)
-│       │   ├── preview.js       # 선택한 작품 & 개인 칩 미리보기/출력
-│       │   └── dashboard.js     # 관리자 대시보드 (작품별 선택 통계)
-│       ├── components/
-│       │   ├── CircuitMap.jsx   # 전시장 회로도 SVG/Canvas 컴포넌트
-│       │   ├── ArtworkNode.jsx  # 각 작품 노드(애니메이션, 선택 기능)
-│       │   ├── ChipVisualizer.jsx # 개인화 칩(MBTI 스타일) 생성기
-│       │   ├── SelectionList.jsx # 선택 작품 리스트 UI
-│       │   └── Loader.jsx
-│       ├── hooks/
-│       │   └── useFetch.js      # API 연동 (Supabase 백엔드)
-│       └── utils/
-│           ├── chipGenerator.js # 4종 카테고리 기반 성향 칩 로직
-│           └── circuitLayout.js # 전시장 노드 좌표/회로도 경로 계산
-
-├── server/                      # Node.js API 서버 (Supabase 연동)
-│   ├── Dockerfile
-│   ├── package.json
-│   ├── .env.example
-│   └── src/
-│       ├── index.js             # Express 서버 초기화
-│       ├── routes/
-│       │   ├── artworks.js      # 작품 메타데이터 제공
-│       │   ├── selections.js    # 관람객 선택 기록 저장/조회
-│       │   └── stats.js         # 선택 통계 API (대시보드용)
-│       ├── controllers/
-│       │   ├── artworkController.js
-│       │   ├── selectionController.js
-│       │   └── statsController.js
-│       ├── models/
-│       │   ├── Artwork.js       # 작품 정보 스키마
-│       │   └── Selection.js     # 관람객 선택 로그 스키마
-│       └── utils/
-│           └── supabaseClient.js # Supabase 연결
+│       └── app/                   # App Router 방식 페이지
+│           ├── page.js            # 메인: 전시장 회로도 지도 & 작품 선택
+│           ├── preview/
+│           │   └── page.js        # 선택 결과 & 개인 칩 미리보기/출력
+│           └── dashboard/
+│               └── page.js        # 관리자 대시보드 (통계)
 │
-└── scripts/                     # 배포/개발 편의 스크립트
-    ├── build_server.sh
-    ├── build_client.sh
-    └── seed_artworks.sh         # 초기 작품 메타데이터 입력
+├── server/                        # Express + Supabase 백엔드 API
+│   ├── package.json
+│   ├── .env.example               # 환경 변수 샘플 (PORT, SUPABASE_URL, KEY)
+│   └── src/
+│       ├── index.js               # 서버 진입점 (Express, Helmet, CORS)
+│       ├── utils/
+│       │   └── supabaseClient.js  # Supabase 연결 클라이언트
+│       ├── routes/
+│       │   ├── artworks.js        # GET /api/artworks (작품 목록)
+│       │   ├── selections.js      # POST /api/selections, GET /api/selections/:userId
+│       │   └── stats.js           # GET /api/stats (통계)
+│       ├── controllers/
+│       │   ├── artworkController.js    # 작품 메타데이터 처리 로직
+│       │   ├── selectionController.js  # 관람객 선택 저장/조회 로직
+│       │   └── statsController.js      # 작품별/카테고리별 통계 로직
+│       └── models/
+│           ├── Artwork.js         # (향후) 작품 정보 모델 정의
+│           └── Selection.js       # (향후) 선택 로그 모델 정의
+│
+└── scripts/                       # 빌드 및 초기화 스크립트
+    ├── build_server.sh            # 서버 빌드/배포 스크립트
+    ├── build_client.sh            # 클라이언트 빌드/배포 스크립트
+    └── seed_artworks.sh           # 초기 작품 메타데이터 DB 입력
