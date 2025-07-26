@@ -1,0 +1,25 @@
+{
+  "name": "diposium-export",
+  "version": "1.0.0",
+  "description": "- NFC 리더기를 제거하고, 웹/앱 기반으로 작품 선택 → 출력까지 구현",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "setup": "cd server && npm install && cd ../client && npm install && cd ..",
+    "dev": "npm run dev --prefix server & npm run dev --prefix client",
+    "build": "npm run build --prefix server && npm run build --prefix client",
+    "start": "npm run start --prefix server & npm run start --prefix client",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guru99251/diposium-export.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guru99251/diposium-export/issues"
+  },
+  "homepage": "https://github.com/guru99251/diposium-export#readme"
+}

@@ -1,0 +1,18 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Next.js/Build
+.next/
+out/
+dist/
+
+# 환경 변수
+.env*
+!.env.example
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
